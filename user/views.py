@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from user.models import Users
 
 
@@ -10,4 +10,8 @@ def register(request):
         password = request.POST.get('password')
         # print(f'username:{username}  password:{password}')
         user = Users.objects.create(username=username, password=password)
-        return HttpResponse('注册成功')
+        return redirect('/login/')
+
+
+def login(request):
+    return render(request, 'login.html')
