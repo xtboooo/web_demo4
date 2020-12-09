@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from user.models import Users
 from django.http import JsonResponse
 
+
 def register(request):
     if request.method == 'GET':
         return render(request, 'register.html')
@@ -14,9 +15,13 @@ def register(request):
 
 
 def login(request):
+    username = request.session.get('username')
+    if username:
+        return HttpResponse(f'{username} 用户已登录')
+
     if request.method == 'GET':
-        username = request.COOKIES.get('username', '')
-        return render(request, 'login.html', locals())
+        # username = request.COOKIES.get('username', '')
+        return render(request, 'login.html')
     else:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -27,6 +32,10 @@ def login(request):
         return JsonResponse({'message': 'login failed'})
     else:
         response = JsonResponse({'message': 'login success'})
-        if remember == 'true':
-            response.set_cookie('username', username, max_age=14*24*3600)
+        request.session['user_id'] = user.id
+        request.session['username'] = user.username
+        if remember != 'true':
+            request.session.set_expiry(0)
+        # if remember == 'true':
+        #     response.set_cookie('username', username, max_age=14*24*3600)
         return response

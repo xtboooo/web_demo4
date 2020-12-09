@@ -86,6 +86,25 @@ DATABASES = {
     }
 }
 
+# Django框架的缓存存储配置，默认是服务器内存，此处将缓存配置为：redis
+CACHES = {
+    # 缓存空间
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        # 缓存空间的地址，此处是对应redis数据库的地址
+        # 注意：这里 192.168.19.131 需要改成自己的 redis 数据库的IP
+        "LOCATION": "redis://127.0.0.1:6379/4",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Django框架的 Session 存储配置，此处是设置将 Session 数据存储到缓存中
+# 注意：因为缓存已经设置为了redis，所有自然 session 数据就会存储到 redis 数据库中
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# 此处是设置将 Session 数据存储到 CACHES 缓存的 default 空间中
+SESSION_CACHE_ALIAS = "default"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
