@@ -43,3 +43,18 @@ def login(request):
         # if remember == 'true':
         #     response.set_cookie('username', username, max_age=14*24*3600)
         return response
+
+
+def user_info(request, id):
+    try:
+        user = Users.objects.get(id=id)
+    except Users.DoesNotExist:
+        return JsonResponse({'message': '用户不存在'})
+    else:
+        res_data = {
+            'id': user.id,
+            'name': user.username,
+            'gender': user.gender,
+            'age': user.age,
+        }
+    return JsonResponse(res_data)
