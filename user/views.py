@@ -7,9 +7,13 @@ def register(request):
     if request.method == 'GET':
         return render(request, 'register.html')
     else:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        # print(f'username:{username}  password:{password}')
+        import json
+        res_dict = json.loads(request.body)
+        username = res_dict.get('username')
+        password = res_dict.get('password')
+        # username = request.POST.get('username')
+        # password = request.POST.get('password')
+        print(f'username:{username}  password:{password}')
         user = Users.objects.create(username=username, password=password)
         return redirect('/login/')
 
